@@ -1,0 +1,43 @@
+#!/usr/bin/env ruby
+
+$: << File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
+
+def usage
+  u = <<USAGE
+switchy - turn external lights on/off
+switchy <light> <on|off|status>
+USAGE
+end
+
+require 'switchy'
+
+light = ARGV[0].to_i
+
+command = ARGV[1].downcase
+
+unless light > 0 && light < 5
+  puts usage
+  raise "ERROR: ARGV[1] must be between 1 and 4"
+end
+
+unless ["on", "off", "status"].include?(command)
+  puts usage
+  raise "ERROR: ARGV[2] must be one of on/off/status"
+end
+
+raise "ERROR: status not yet implemented" if command == 'status'
+
+command = if command == 'on'
+            1
+          else
+            0
+          end
+
+s = Switchy.new
+
+puts "COMMAND: light: #{light}, command: #{command}"
+s.set_light light, command
+# s.send "light#{light}=", command
+
+
+

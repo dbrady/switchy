@@ -1,0 +1,78 @@
+= Switchy
+
+Ruby Application to switch AC loads (e.g. turn a lamp on and off).
+
+= Example
+
+== Command-line App
+
+TODO: This documentation is prescriptive, not descriptive. Update this
+when it's finally implemented.
+
+ $ switchy 1 status
+ Light 1 is: OFF
+ $ switchy 1 on
+ Light 1 switched on.
+ $ switchy 1 status
+ Light 1 is: ON
+ $ switchy 1 off
+ Light 1 switched off.
+ $ switchy 1 on
+ Light 1 switched on.
+
+== Ruby Library
+
+TODO: This documentation is prescriptive, not descriptive. Update this
+when it's finally implemented.
+
+ # Direct Access to individual lights
+ # ----------------------------------------
+ # Light 1 starts out off. 
+ s = Switchy.new
+ s.light1
+ # => false # light 1 is off
+ s.light1 = true
+ # => false # previous state returned; light1 was off, now on
+ s.light1
+ # => true
+ s.light1 = false
+ # => true # previous state again; light1 was on, now off
+ 
+ # Access to lights array
+ # ----------------------------------------
+ s.lights
+ # => [false, false, false, false, false, false]
+ s.lights[2]
+ # => false
+ s.lights[2] = true
+ # => false 
+ s.lights[2]
+ # => true
+ s.lights[2] = false
+ # => true
+ s.lights[2]
+ # => false
+
+
+= The Hardware
+
+TODO: Write me!
+
+- This application
+- Ruby serialport gem
+- Teensy development board / Atmel AVR at90usb162
+- usb_serial driver for Teensy
+- switching circuit
+- modified power strip
+
+= USB Serial Driver
+
+ Teensy USB Serial Example, Simple Pin Control Shell
+ 
+ Example Commands
+   B0?   Read Port B, pin 0
+   C2=0  Write Port C, pin 1 LOW
+   D6=1  Write Port D, pin 6 HIGH  (D6 is LED pin)
+ 
+ > 
+
