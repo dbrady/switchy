@@ -5,7 +5,11 @@ $: << File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
 def usage
   u = <<USAGE
 switchy - turn external lights on/off
-switchy <light> <on|off|status>
+switchy <light> <0|1>
+
+light:
+  0 - Onboard LED (reversed: 0 = on, 1 = off)
+  1-4 External Switches (1 = on)
 USAGE
 end
 
@@ -13,31 +17,34 @@ require 'switchy'
 
 light = ARGV[0].to_i
 
-command = ARGV[1].downcase
+command = ARGV[1].to_i
 
-unless light > 0 && light < 5
+unless light >= 0 && light < 5
   puts usage
-  raise "ERROR: ARGV[1] must be between 1 and 4"
+  raise "ERROR: ARGV[1] must be between 0 and 4"
 end
 
-unless ["on", "off", "status"].include?(command)
+unless command >= 0 && command <= 1
   puts usage
   raise "ERROR: ARGV[2] must be one of on/off/status"
 end
 
 raise "ERROR: status not yet implemented" if command == 'status'
 
-command = if command == 'on'
-            1
-          else
-            0
-          end
+lights = [
+          Switchy::PINS::D6,
+          Switchy::PINS::C4,
+          Switchy::PINS::C5,
+          Switchy::PINS::C6,
+          Switchy::PINS::C7
+         ]
 
 s = Switchy.new
 
-puts "COMMAND: light: #{light}, command: #{command}"
-s.set_light light, command
-# s.send "light#{light}=", command
+# The serial port is a bit tetchy. Give it a few cycles to settle.
+sleep 0.05
+
+s.set_pin lights[light], command
 
 
 
