@@ -76,3 +76,17 @@ TODO: Write me!
  
  > 
 
+= TODO
+
+* Circuit defaults: should light onboard LED and no other outputs.
+
+* There's an enable line on the 74ls244 driver chip. Use it. Device
+  should boot disabled. Once everything's had a chance to settle
+  (10-100ms or so), enable the driver chip.
+
+* Add circuit schematics to the project.
+
+* Fork the circuit, make a version with just a little LED light bar
+  and no 120VAC switching. (Trust me. The little LEDs are VERY
+  compelling!)
+
