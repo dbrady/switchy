@@ -94,7 +94,6 @@ class Switchy
   
   def connect
     @sp = SerialPort.new @modem, @baud
-    puts "Connected"
   end
   
   def disconnect
@@ -104,13 +103,11 @@ class Switchy
   # Set pin "b4", 1 # turn on pin b4
   def set_pin(p, v)
     cmd = "#{p.upcase}=#{v}\r\n"
-    puts cmd
     @sp.write cmd
   end
     
   def set_light(l, v)
     cmd = "C#{l+3}=#{v}\r\n"
-    puts cmd
     @sp.write cmd
   end
   

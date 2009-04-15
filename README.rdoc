@@ -78,7 +78,17 @@ TODO: Write me!
 
 = TODO
 
-* Circuit defaults: should light onboard LED and no other outputs.
+
+* Circuit default lights at boot should light onboard LED and no other
+  outputs.
+
+* Add blink feature to usb protocol. NOTE: This will entail setting up
+  a flasher register and timing/counters. For starters, just set it to
+  blink a hard-coded rate when "2" is sent, e.g "switchy 1 2" would
+  blink light 1 at some rate. Later we can attach different blink
+  rates and/or patterns to other numbers. For example, 3 might blink
+  at the same rate as 2 but out of phase, so "switchy 1 2 2 3" would
+  oscillate lights 1 and 2.
 
 * There's an enable line on the 74ls244 driver chip. Use it. Device
   should boot disabled. Once everything's had a chance to settle
@@ -89,4 +99,56 @@ TODO: Write me!
 * Fork the circuit, make a version with just a little LED light bar
   and no 120VAC switching. (Trust me. The little LEDs are VERY
   compelling!)
+  * 4-LED Version. Fixed colors on all LEDS.
+    * Blue/White LED: Specs are running
+    * Green LED: Specs passed!
+    * Yellow LED: Specs were Pending!
+    * Red LED: Specs failed!
+  * 3-LED version. Fixed colors on all LEDS. LEDs blink when specs are
+    running. Version 1: blink green, or all 3, or cycle all 3, LEDs.
+    Version 2: blinking green means running, blinking yellow means
+    running but a pending spec was found, and blinking red means it's
+    still running but failures have occurred.
+    * Blinking: Specs are running.
+    * Green LED: Specs passed!
+    * Yellow LED: Specs were Pending!
+    * Red LED: Specs failed!
+  * 1-LED Version. Single RGB LED.
+    * Blinking (ooh, or throbbing) Blue/White: Specs running
+    * Green: Passed
+    * Yellow: Pending
+    * Red: Failed
+  * 1-LED Version. Single Bi-color. Same as RGB. Will need to
+    oscillate because red/green = orange.
+    * Blinking: Running
+    * Green: Passed
+    * Orange: Pending
+    * Red: Failed
 
+* Expand the switch control logic. Need static on/off, Timers, and
+  blinkers. Note: if the board can handle infinite vs. countdown, then
+  implementing one-shot timers is easy: just set countdown to 1.
+  * Static on/off: Sit pin state and forget about it.
+    SET C4 1
+  * Blinker: set pin state for n milliseconds, toggle to other state
+    for m milliseconds. Repeat x times. (0 = infinite)
+    TMR C7 1 500 250 10
+  * Timer: set pin state for n milliseconds, then toggle it to other
+    state.
+    TMR C6 0 60000 250 1 # alarm timer, flashes C6 once for 250ms
+    after 60s
+
+* Given the above switch control logic, the ruby app should now be
+  able to programmatically define compound events like:
+  * When program starts, turn off siren, green, yellow and red lights.
+  * When test runs, turn off siren, yellow and red lights, and blink
+    green light at 2Hz.
+  * If a spec is pending and green light is blinking, turn off green
+    link and blink yellow light at 2Hz.
+  * If a spec fails and red light is off, turn off green and yellow
+    lights, honk siren for 250ms, and blink red light at 2Hz.
+  * When specs all pass, turn on green light for 10 seconds.
+  * When specs fail, "blink" siren for 1 second every 60 seconds, turn
+    on red light and leave it on.
+  * Blink RGB yellow by seting Red and Green to blink. (Need to build
+    the system to permit synchronous blink rates.)
