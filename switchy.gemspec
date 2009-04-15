@@ -1,7 +1,7 @@
 spec = Gem::Specification.new do |s|
   s.name = 'switchy'
-  s.version = '0.0.2'
-  s.date = '2009-04-14'
+  s.version = '0.0.3'
+  s.date = '2009-04-15'
   s.summary = 'Switchy USB serial load switcher'
   s.email = "github@shinybit.com"
   s.homepage = "http://github.com/dbrady/switchy"
