@@ -1,6 +1,6 @@
 spec = Gem::Specification.new do |s|
   s.name = 'switchy'
-  s.version = '0.0.1'
+  s.version = '0.0.2'
   s.date = '2009-04-14'
   s.summary = 'Switchy USB serial load switcher'
   s.email = "github@shinybit.com"
@@ -8,7 +8,7 @@ spec = Gem::Specification.new do |s|
   s.description = "Switchy USB serial load switcher"
   s.has_rdoc = true
   s.rdoc_options = ["--line-numbers", "--inline-source", "--main", "README.rdoc", "--title", "Switchy -  USB serial load switcher"]
-  s.executables = ["switchy"]
+  s.executables = ["switchy", "sparky"]
   s.extra_rdoc_files = ["README.rdoc", "MIT-LICENSE"]
   s.authors = ["David Brady"]
   s.add_dependency('ruby-serialport')
