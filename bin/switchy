@@ -25,6 +25,17 @@ s = Switchy.new
 sleep 0.05
 
 
+# lights by number => pair of pins, one to set high, the other low
+# TODO: change these into on/off arrays so we can set multiple lights with a single command
+# TODO: consider dropping this altogether and doing "switchy C4 1 C5 0" etc?
+lights = {
+  0 => [nil, Switchy::PINS::D6 ],
+  1 => [Switchy::PINS::C4, Switchy::PINS::C5 ],
+  2 => [Switchy::PINS::B7, Switchy::PINS::B6 ],
+  3 => [Switchy::PINS::B5, Switchy::PINS::B4 ],
+  4 => [Switchy::PINS::B3, Switchy::PINS::B2 ],
+}
+
 until args.empty?
   light = args.shift.to_i
   command = args.shift.to_i
@@ -41,16 +52,8 @@ until args.empty?
 
   raise "ERROR: status not yet implemented" if command == 'status'
 
-  lights = [
-            Switchy::PINS::D6,
-            Switchy::PINS::C4,
-            Switchy::PINS::C5,
-            Switchy::PINS::C6,
-            Switchy::PINS::C7
-           ]
-
-  s.set_pin lights[light], command
-
+  s.set_pin(lights[light][0], command) if lights[light][0]
+  s.set_pin(lights[light][1], 1-command) if lights[light][1]
 end
 
 
