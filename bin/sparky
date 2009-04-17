@@ -10,11 +10,11 @@ def show_run
 end
 
 def show_pending
-  system "switchy 1 0 2 1 3 0 4 0"
+  system "switchy 1 0 2 0 3 1 4 0"
 end
 
 def show_fail
-  system "switchy 1 0 2 0 3 1 4 0"
+  system "switchy 1 0 2 1 3 0 4 0"
 end
 
 def show_pass
