@@ -1,7 +1,7 @@
 spec = Gem::Specification.new do |s|
   s.name = 'switchy'
-  s.version = '0.0.6'
-  s.date = '2009-04-17'
+  s.version = '0.1.0'
+  s.date = '2009-04-19'
   s.summary = 'Switchy USB serial load switcher'
   s.email = "github@shinybit.com"
   s.homepage = "http://github.com/dbrady/switchy"
@@ -15,8 +15,9 @@ spec = Gem::Specification.new do |s|
 
 
   # ruby -rpp -e "pp (Dir['{README,{examples,lib,protocol,spec}/**/*.{rdoc,json,rb,txt,xml,yml}}'] + Dir['bin/*']).sort"
-  s.files = ["bin/switchy",
-             "bin/sparky",
-             "lib/switchy.rb"
-            ]
+  s.files = ["bin/sparky",
+             "bin/switchy",
+             "lib/sparky.rb",
+             "lib/sparky_progress_formatter.rb",
+             "lib/switchy.rb"]
 end

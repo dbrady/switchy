@@ -13,18 +13,17 @@ module Spec
         def initialize(a,b)
           super
           @sparky = Sparky.new
-          @sparky.reset
-          @sparky.run
+          @sparky.start_run
         end
 
         def start_dump
-          @sparky.clear_run
+          @sparky.finish_run
           super
         end
         
         def example_passed(example)
           unless @@anything_pended_ever || @@anything_failed_ever
-            @sparky.pass
+            @sparky.example_passed
           end
           super
         end
@@ -32,9 +31,7 @@ module Spec
         def example_failed(example, counter, failure)
           unless @@anything_failed_ever
             @@anything_failed_ever = true
-            @sparky.clear_pass
-            @sparky.clear_pending
-            @sparky.fail
+            @sparky.example_failed
           end
           super
         end
@@ -42,8 +39,7 @@ module Spec
         def example_pending(example, message, pending_caller)
           unless @@anything_pended_ever || @@anything_failed_ever
             @@anything_pended_ever = true
-            @sparky.clear_pass
-            @sparky.pending
+            @sparky.example_pending
           end
           super
         end

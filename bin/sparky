@@ -32,7 +32,14 @@ when "fail" then show_fail
 when "pass" then show_pass
 when "run" then show_run
 when "test" then show_test
+when "spec"
+  lib_path = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'sparky_progress_formatter.rb'))
+  args = ARGV[1..-1].dup.map {|a| '"' + a.gsub(/"/, '\"') + '"' } * ' '
+  cmd = "spec --require #{lib_path} --format Spec::Runner::Formatter::SparkyProgressFormatter #{args}"
+  system(cmd)
 else
+  # TODO: If spec or rake spec:*, bind formatter
+  # TODO: If autospec, bind formatter
   show_run
 
   cmd = ARGV.map {|a| '"' + a.gsub(/"/, '\"') + '"' } * ' '
