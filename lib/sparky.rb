@@ -9,8 +9,8 @@ class Sparky
   @@run_pins = [[Switchy::PINS::C4, Switchy::PINS::C2], [Switchy::PINS::C5, Switchy::PINS::D0 ]]
   @@fail_pins = [[Switchy::PINS::C6, Switchy::PINS::D1], [Switchy::PINS::C7, Switchy::PINS::D2]]
   @@pending_pins = [[Switchy::PINS::B7, Switchy::PINS::D3], [Switchy::PINS::B6, Switchy::PINS::D4]]
-  @@pass_pins = [[Switchy::PINS::B5, Switchy::PINS::B3, Switchy::PINS::D7, Switchy::PINS::D5],
-                 [Switchy::PINS::B4, Switchy::PINS::B2, Switchy::PINS::B0, Switchy::PINS::D6]]
+  @@pass_pins = [[Switchy::PINS::B3, Switchy::PINS::D7, Switchy::PINS::B5, Switchy::PINS::D5],
+                 [Switchy::PINS::B2, Switchy::PINS::B0, Switchy::PINS::B4, Switchy::PINS::D6]]
 
   @@reset_pins = [[Switchy::PINS::C4, Switchy::PINS::C2,
                   Switchy::PINS::C6, Switchy::PINS::D1,
@@ -18,7 +18,7 @@ class Sparky
                   Switchy::PINS::B5, Switchy::PINS::B3, 
                   Switchy::PINS::D7, Switchy::PINS::D5]]
   def initialize
-    @passed, @failed, @pending = 0, 0, 0
+    @passed, @failed, @pending = -1, -1, -1
     @switchy = Switchy.new
   end
   
@@ -99,19 +99,19 @@ class Sparky
   end
   
   def example_passed
-    clear_pin pin(:passed, @passed % 4) if @passed > 0
+    clear_pin pin(:passed, @passed % 4) if @passed >= 0
     @passed += 1
     set_pin pin(:passed, @passed % 4)
   end
   
   def example_failed
-    clear_pin pin(:failed, @failed % 2) if @failed > 0
+    clear_pin pin(:failed, @failed % 2) if @failed >= 0
     @failed += 1
     set_pin pin(:failed, @failed % 2)
   end
   
   def example_pending
-    clear_pin pin(:pending, @pending % 2) if @pending > 0
+    clear_pin pin(:pending, @pending % 2) if @pending >= 0
     @pending += 1
     set_pin pin(:pending, @pending % 2)
   end

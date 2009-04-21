@@ -22,25 +22,19 @@ module Spec
         end
         
         def example_passed(example)
-          unless @@anything_pended_ever || @@anything_failed_ever
-            @sparky.example_passed
-          end
+          @sparky.example_passed
           super
         end
         
         def example_failed(example, counter, failure)
-          unless @@anything_failed_ever
-            @@anything_failed_ever = true
-            @sparky.example_failed
-          end
+          @@anything_failed_ever = true
+          @sparky.example_failed
           super
         end
         
-        def example_pending(example, message, pending_caller)
-          unless @@anything_pended_ever || @@anything_failed_ever
-            @@anything_pended_ever = true
-            @sparky.example_pending
-          end
+        def example_pending(example, message)
+          @@anything_pended_ever = true
+          @sparky.example_pending
           super
         end
       end

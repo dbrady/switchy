@@ -1,6 +1,6 @@
 spec = Gem::Specification.new do |s|
   s.name = 'switchy'
-  s.version = '0.1.0'
+  s.version = '0.1.1'
   s.date = '2009-04-19'
   s.summary = 'Switchy USB serial load switcher'
   s.email = "github@shinybit.com"
@@ -19,5 +19,6 @@ spec = Gem::Specification.new do |s|
              "bin/switchy",
              "lib/sparky.rb",
              "lib/sparky_progress_formatter.rb",
+             "res/spec.sparky.opts",
              "lib/switchy.rb"]
 end
