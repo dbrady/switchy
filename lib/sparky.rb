@@ -89,9 +89,9 @@ class Sparky
   
   def finish_run
     reset
-    if @failed > 0
+    if @failed > -1
       failed
-    elsif @pending > 0
+    elsif @pending > -1
       pending
     else
       pass
