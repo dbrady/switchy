@@ -6,24 +6,37 @@ Ruby Application to switch AC loads (e.g. turn a lamp on and off).
 
 == Command-line App
 
-TODO: This documentation is prescriptive, not descriptive. Update this
-when it's finally implemented.
+ $ switchy 1 1 2 0 10 1 8 1
+ # => Lights 1, 8, 10 turn on; light 2 turns off
 
- $ switchy 1 status
- Light 1 is: OFF
- $ switchy 1 on
- Light 1 switched on.
- $ switchy 1 status
- Light 1 is: ON
- $ switchy 1 off
- Light 1 switched off.
- $ switchy 1 on
- Light 1 switched on.
+DANGER: This is wildly incompatible with the original design of
+switchy. The original design is intended to drive a single external
+device from a single pin through a relay.
+
+The prototype design, however, ended up getting optimizing for low
+part count, and in fact I just soldered LEDs directly to the logic
+board (and there ARE no other parts). This means that each LED is
+soldered across TWO pins.
+
+Turning on light 1, for instance, involves driving pin C4 high and
+driving pin C5 low.
+
+Remember that when discussing lights, we turn them on or off, but when
+discussing the logic pins we drive them high or low, because when you
+drive a pin low you are actually establishing a connection between
+that pin and ground, allowing current to "sink".
 
 == Ruby Library
 
-TODO: This documentation is prescriptive, not descriptive. Update this
-when it's finally implemented.
+TODO: The ruby lib is pretty messed up. Here's what currently works
+well:
+
+ s = Switchy.new
+ s.set_pin Switchy::PINS::D6, 0
+ # Drives pin D6 low (which turns on the on-board LED)
+ s.set_pin Switchy::PINS::B3, 1
+ # Drives pin B3 high
+
 
  # Direct Access to individual lights
  # ----------------------------------------
