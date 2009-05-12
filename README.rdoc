@@ -4,7 +4,11 @@ Ruby Application to switch AC loads (e.g. turn a lamp on and off).
 
 = Example
 
-== Command-line App
+== Command-line Apps
+
+=== Switchy
+
+Switchy gives you control of each light individually.
 
  $ switchy 1 1 2 0 10 1 8 1
  # => Lights 1, 8, 10 turn on; light 2 turns off
@@ -26,10 +30,37 @@ discussing the logic pins we drive them high or low, because when you
 drive a pin low you are actually establishing a connection between
 that pin and ground, allowing current to "sink".
 
+=== Sparky
+
+A wrapper on top of switchy that gives you pass/pending/fail
+semantics.
+
+ $ sparky (run|pass|pending|fail)
+ # => turns on running|green|yellow|red lights
+
+ $ sparky <system command> [<command options>]
+
+ # => Turns on run lights and executise shell command. If the exit
+ #    code is 0, turns green. Any other exit code and it turns red.
+
+=== Sparcumber
+
+Sparcumber is a cucumber wrapper. It hooks into Cucumber's
+AST::Visitor class. Use it like you would use Cucumber:
+
+  $ sparcumber -r features features/
+
+One additional bit of cleverness: While running, each step that
+passes/pends/fails will turn on ONE light of the appropriate color. If
+another step exits in the same condition, that color light will
+advance (E.g. the currently lit green light will go out and the next
+one will turn on). This provides the visual effect of animating the
+feature output. Note that it is thus possible to 5 leds lit at once:
+the 2 running lights plus one each of red, yellow and green.
+
 == Ruby Library
 
-TODO: The ruby lib is pretty messed up. Here's what currently works
-well:
+TODO: The ruby lib is pretty messed up. Here's what currently works:
 
  s = Switchy.new
  s.set_pin Switchy::PINS::D6, 0
@@ -37,151 +68,45 @@ well:
  s.set_pin Switchy::PINS::B3, 1
  # Drives pin B3 high
 
-
- # Direct Access to individual lights
- # ----------------------------------------
- # Light 1 starts out off. 
- s = Switchy.new
- s.light1
- # => false # light 1 is off
- s.light1 = true
- # => false # previous state returned; light1 was off, now on
- s.light1
- # => true
- s.light1 = false
- # => true # previous state again; light1 was on, now off
- 
- # Access to lights array
- # ----------------------------------------
- s.lights
- # => [false, false, false, false, false, false]
- s.lights[2]
- # => false
- s.lights[2] = true
- # => false 
- s.lights[2]
- # => true
- s.lights[2] = false
- # => true
- s.lights[2]
- # => false
-
-
 = The Hardware
+
+...is currently very much in flux.
 
 TODO: Write me!
 
-- This application
-- Ruby serialport gem
-- Teensy development board / Atmel AVR at90usb162
-- usb_serial driver for Teensy
-- switching circuit
-- modified power strip
-
-= USB Serial Driver
-
- Teensy USB Serial Example, Simple Pin Control Shell
- 
- Example Commands
-   B0?   Read Port B, pin 0
-   C2=0  Write Port C, pin 1 LOW
-   D6=1  Write Port D, pin 6 HIGH  (D6 is LED pin)
- 
- > 
-
 = TODO
 
-
-* Circuit default lights at boot should light onboard LED and no other
-  outputs.
-
-* Add blink feature to usb protocol. NOTE: This will entail setting up
-  a flasher register and timing/counters. For starters, just set it to
-  blink a hard-coded rate when "2" is sent, e.g "switchy 1 2" would
-  blink light 1 at some rate. Later we can attach different blink
-  rates and/or patterns to other numbers. For example, 3 might blink
-  at the same rate as 2 but out of phase, so "switchy 1 2 2 3" would
-  oscillate lights 1 and 2.
-
-* There's an enable line on the 74ls244 driver chip. Use it. Device
+- There's an enable line on the 74ls244 driver chip. Use it. Device
   should boot disabled. Once everything's had a chance to settle
   (10-100ms or so), enable the driver chip.
 
-* Add circuit schematics to the project.
+- Add circuit schematics to the project.
 
-* Fork the circuit, make a version with just a little LED light bar
-  and no 120VAC switching. (Trust me. The little LEDs are VERY
+- [DONE] Fork the circuit, make a version with just a little LED light
+  bar and no 120VAC switching. (Trust me. The little LEDs are VERY
   compelling!)
-  * 4-LED Version. Fixed colors on all LEDS.
-    * Blue/White LED: Specs are running
-    * Green LED: Specs passed!
-    * Yellow LED: Specs were Pending!
-    * Red LED: Specs failed!
-  * 3-LED version. Fixed colors on all LEDS. LEDs blink when specs are
-    running. Version 1: blink green, or all 3, or cycle all 3, LEDs.
-    Version 2: blinking green means running, blinking yellow means
-    running but a pending spec was found, and blinking red means it's
-    still running but failures have occurred.
-    * Blinking: Specs are running.
-    * Green LED: Specs passed!
-    * Yellow LED: Specs were Pending!
-    * Red LED: Specs failed!
-  * 1-LED Version. Single RGB LED.
-    * Blinking (ooh, or throbbing) Blue/White: Specs running
-    * Green: Passed
-    * Yellow: Pending
-    * Red: Failed
-  * 1-LED Version. Single Bi-color. Same as RGB. Will need to
-    oscillate because red/green = orange.
-    * Blinking: Running
-    * Green: Passed
-    * Orange: Pending
-    * Red: Failed
 
-* Expand the switch control logic. Need static on/off, Timers, and
-  blinkers. Note: if the board can handle infinite vs. countdown, then
-  implementing one-shot timers is easy: just set countdown to 1.
-  * Static on/off: Sit pin state and forget about it.
-    SET C4 1
-  * Blinker: set pin state for n milliseconds, toggle to other state
-    for m milliseconds. Repeat x times. (0 = infinite)
-    TMR C7 1 500 250 10
-  * Timer: set pin state for n milliseconds, then toggle it to other
-    state.
-    TMR C6 0 60000 250 1 # alarm timer, flashes C6 once for 250ms
-    after 60s
+- [ABANDONED] Add duty cycling/blinking to the board. (Tabled for now.
+  The USB serial port driver that comes with the Teensy board appears
+  to use blocking methods. The code libraries are poorly documented
+  and will require a significantly higher amount of expertise with AVR
+  programming than I currently have before I can port it to a
+  non-blocking form.)
 
-* Given the above switch control logic, the ruby app should now be
-  able to programmatically define compound events like:
-  * When program starts, turn off siren, green, yellow and red lights.
-  * When test runs, turn off siren, yellow and red lights, and blink
-    green light at 2Hz.
-  * If a spec is pending and green light is blinking, turn off green
-    link and blink yellow light at 2Hz.
-  * If a spec fails and red light is off, turn off green and yellow
-    lights, honk siren for 250ms, and blink red light at 2Hz.
-  * When specs all pass, turn on green light for 10 seconds.
-  * When specs fail, "blink" siren for 1 second every 60 seconds, turn
-    on red light and leave it on.
-  * Blink RGB yellow by seting Red and Green to blink. (Need to build
-    the system to permit synchronous blink rates.)
+- Write a simulator for the 6.3E+06-1 people on the planet who do not
+  have the only existing prototype. I think a little MacRuby
+  Red/Green/Refactor applet would be spiffy all by itself--and would
+  make debugging/testing driver and linking apps much easier.
 
-* 2009-04-20: Review previous TODOs in light of first finished
+- [DONE] 2009-04-20: Review previous TODOs in light of first finished
   prototype.
 
-* Change progress formatter lights, and light up only one
+- [DONE] Change progress formatter lights, and light up only one
   pass/fail/pending LED as specs run. As each example completes,
   animate the display by moving the the one led to another spot. So if
   all your specs are passing, you'll see the green light move 1 -> 2
   -> 3 -> 4 -> 1 -> 2 etc. If you have any pending specs, they will
   light up 1 -> 2 -> 1 -> 2 etc. When the test finishes, light up all
   the status lights of the appropriate color.
-
-* As a potential addition, light up one of EACH status color as they
-  occur. So you might have Pass light 3, Pending light 2, and Fail
-  light 1 lit. As each example completes, animate the status light for
-  that example's color. Then, when it's finished, turn on all status
-  lights for the final pass/pend/fail status and turn off all other
-  lights.
 
 

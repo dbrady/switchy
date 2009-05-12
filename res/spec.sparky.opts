@@ -1,5 +1,5 @@
 --colour
---require /Library/Ruby/Gems/1.8/gems/switchy-0.1.0/lib/sparky_progress_formatter.rb
+--require /Library/Ruby/Gems/1.8/gems/switchy-0.1.2/lib/sparky_progress_formatter.rb
 --format Spec::Runner::Formatter::SparkyProgressFormatter
 --loadby mtime
 --reverse

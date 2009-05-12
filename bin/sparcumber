@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+libdir = File.expand_path(File.join(File.dirname(Gem.bin_path("switchy", "switchy", ">=0")), "..", "lib"))
+cmd = "cucumber --require #{libdir}/sparky_cucumber.rb " + ARGV.map {|a| '"' + a.gsub(/"/, '\"') + '"' } * ' '
+system(cmd)
+

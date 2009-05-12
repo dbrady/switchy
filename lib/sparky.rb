@@ -49,14 +49,16 @@ class Sparky
   def pass
     set_pins @@pass_pins
   end
+  alias :passed :pass
   
   def clear_pass
     clear_pins @@pass_pins
   end
   
-  def failed
+  def fail
     set_pins @@fail_pins
   end
+  alias :failed :fail
   
   def clear_failed
     clear_pins @@fail_pins

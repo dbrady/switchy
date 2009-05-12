@@ -1,3 +1,6 @@
+require 'rubygems'
+gem 'cucumber', '>= 0.3.0'
+
 require 'sparky'
 
 module Cucumber
@@ -8,10 +11,13 @@ module Cucumber
       alias :orig_visit_features :visit_features
       
       def visit_features(features)
-        @sparky = Sparky.new
-        @sparky.start_run
-        orig_visit_features(features)
-        @sparky.finish_run
+        begin
+          @sparky = Sparky.new
+          @sparky.start_run
+          orig_visit_features(features)
+        ensure
+          @sparky.finish_run
+        end
       end
 
       def visit_step_result(keyword, step_match, multiline_arg, status, exception, source_indent, background)

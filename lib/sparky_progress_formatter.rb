@@ -3,6 +3,11 @@ require 'spec/runner/formatter/progress_bar_formatter'
 $: << File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'sparky'
 
+# TODO: rewire this to just patch the base class like I did in
+# sparky_cucumber.rb. May be problematic as the child classes here
+# ain't so good at calling super, so I may just need to patch the key
+# formatters I normally use like ProgressBar and Html.
+
 module Spec
   module Runner
     module Formatter
