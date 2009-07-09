@@ -86,44 +86,56 @@ class Switchy
   end
 
   attr_accessor :modem, :baud
+  attr_accessor :borked # true when the device was not found at startup. Makes switchy-inclusive apps noncrashy when they find themselves unexpectedly switchy-excluded
+  def borked?; @borked; end
   
   def initialize(modem = '/dev/tty.usbmodem12341', baud=38400)
+    @borked = !File.exists?(modem)
+    puts "**** Could not find Switchy device on #{modem}" if borked?
     @modem, @baud = modem, baud
     connect
   end
   
   def connect
+    return if borked?
     @sp = SerialPort.new @modem, @baud
   end
   
   def disconnect
+    return if borked?
     # ???
   end
   
   # Set pin "b4", 1 # turn on pin b4
   def set_pin(p, v)
+    return if borked?
     cmd = "#{p.upcase}=#{v}\r\n"
     @sp.write cmd
   end
     
   def set_light(l, v)
+    return if borked?
     cmd = "C#{l+3}=#{v}\r\n"
     @sp.write cmd
   end
   
   def light1=(v)
+    return if borked?
     set_light 1, v
   end
   
   def light2=(v)
+    return if borked?
     set_light 2, v
   end
   
   def light3=(v)
+    return if borked?
     set_light 3, v
   end
   
   def light4=(v)
+    return if borked?
     set_light 4, v
   end
   
