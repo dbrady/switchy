@@ -2,6 +2,44 @@
 
 Ruby Application to switch AC loads (e.g. turn a lamp on and off).
 
+Update 2009-09-26: This has actually become something of a
+unit-testing light dongle for me. The basic switching hardware was
+finished quite early, so the only thing left to do was to add a Killer
+Demo App(TM). The basic switching app is just called "switchy", and it
+controls individual pins 1 through 10 on the board.
+
+The Killer Demo, then, would be Sparky, Sparcumber, and Autospark.
+Each of these has a "christmas tree" LED arrangement: Five LEDs on
+each side of the device are wired for run, fail, warning, and pass.
+There are two green LEDs for pass on each side, so the pinouts are:
+
+Pins 1-5 (left side): blue, red, yellow, green, green
+Pins 10-6 (right side, note reverse order because pin numbering continues
+clockwise around the board): blue, red, yellow, green, green
+
+Sparky provides an RSpec progress formatter, so that it gets updated
+as each spec runs. While running it animates the LEDs to show the
+current overall progress. As each spec finishes an LED of the
+appropriate color lights up.
+
+Sparky also has a generic mode. If you run "sparky foo", sparky will
+turn on the running lights, then run the foo command. When foo
+finishes, its exit status will be used to turn on either the red or
+green lights.
+
+Sparcumber does for Cucumber what Sparky does for RSpec. Get Cucumber
+configured so you can type "cucumber" from the root of your project,
+then type "sparcumber" instead. Sparcumber will light up the board as
+Cucumber runs.
+
+Autospark is currently vaporware. All it should do is hook sparky into
+autospec. Patches are welcome. There is a spec.sparky.opts file in the
+res folder, however, that will achieve this for now, but it does cause
+your project to take a dependency on sparky, which in turn requires
+having the hardware dongle connected to run your specs, which is less
+than agile.
+
+
 = Example
 
 == Command-line Apps
