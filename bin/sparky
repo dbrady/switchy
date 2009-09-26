@@ -1,52 +1,79 @@
 #!/usr/bin/env ruby
-# 
-# TODO! This, along with switchy, needs to be made into a rubygem!
-# Others may have difficulty using this in a portable fashion without
-# a /Users/dbrady folder, for example...
 
-def show_run
-#  system "switchy 1 0 2 1 3 1 4 1"
-  system "switchy 1 1 2 0 3 0 4 0 5 0 6 0 7 0 8 0 9 0 10 1"
+class Sparky
+  def show_run
+    #  system "switchy 1 0 2 1 3 1 4 1"
+    system "switchy 1 1 2 0 3 0 4 0 5 0 6 0 7 0 8 0 9 0 10 1"
+  end
+
+  def show_fail
+    system "switchy 1 0 2 1 3 0 4 0 5 0 6 0 7 0 8 0 9 1 10 0"
+  end
+
+  def show_pending
+    system "switchy 1 0 2 0 3 1 4 0 5 0 6 0 7 0 8 1 9 0 10 0"
+  end
+
+  def show_pass
+    system "switchy 1 0 2 0 3 0 4 1 5 1 6 1 7 1 8 0 9 0 10 0"
+  end
+
+  def show_reset
+    system "switchy 1 0 2 0 3 0 4 0 5 0 6 0 7 0 8 0 9 0 10 0"
+  end
+
+  def show_all
+    system "switchy 1 1 2 1 3 1 4 1 5 1 6 1 7 1 8 1 9 1 10 1"
+  end
+  
+  def show_selftest
+    show_reset
+    
+    show_all
+    sleep 1.0
+    show_reset
+    
+    1.upto(10) do |i|
+      system "switchy #{i} 1"
+      system "switchy #{i} 0"
+    end
+    
+    %w(run fail pending pass).each do |msg|
+      send "show_#{msg}"
+      sleep 0.5
+    end
+    sleep 0.5
+    show_reset
+  end
 end
 
-def show_fail
-  system "switchy 1 0 2 1 3 0 4 0 5 0 6 0 7 0 8 0 9 1 10 0"
-end
-
-def show_pending
-  system "switchy 1 0 2 0 3 1 4 0 5 0 6 0 7 0 8 1 9 0 10 0"
-end
-
-def show_pass
-  system "switchy 1 0 2 0 3 0 4 1 5 1 6 1 7 1 8 0 9 0 10 0"
-end
-
-def show_reset
-  system "switchy 1 0 2 0 3 0 4 0 5 0 6 0 7 0 8 0 9 0 10 0"
-end
-
-case ARGV[0].downcase
-when "reset" then show_reset
-when "pending" then show_pending
-when "fail" then show_fail
-when "pass" then show_pass
-when "run" then show_run
-when "test" then show_test
-when "spec"
-  lib_path = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'sparky_progress_formatter.rb'))
-  args = ARGV[1..-1].dup.map {|a| '"' + a.gsub(/"/, '\"') + '"' } * ' '
-  cmd = "spec --require #{lib_path} --format Spec::Runner::Formatter::SparkyProgressFormatter #{args}"
-  system(cmd)
-else
-  # TODO: If spec or rake spec:*, bind formatter
-  # TODO: If autospec, bind formatter
-  show_run
-
-  cmd = ARGV.map {|a| '"' + a.gsub(/"/, '\"') + '"' } * ' '
-
-  if system(cmd)
-    show_pass
+if __FILE__==$0
+  s = Sparky.new
+  
+  case ARGV[0].downcase
+  when "reset" then s.show_reset
+  when "pending" then s.show_pending
+  when "fail" then s.show_fail
+  when "pass" then s.show_pass
+  when "run" then s.show_run
+  when "test" then s.show_test
+  when "selftest" then s.show_selftest
+  when "spec"
+    lib_path = File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib', 'sparky_progress_formatter.rb'))
+    args = ARGV[1..-1].dup.map {|a| '"' + a.gsub(/"/, '\"') + '"' } * ' '
+    cmd = "spec --require #{lib_path} --format Spec::Runner::Formatter::SparkyProgressFormatter #{args}"
+    system(cmd)
   else
-    show_fail
+    # TODO: If spec or rake spec:*, bind formatter
+    # TODO: If autospec, bind formatter
+    s.show_run
+
+    cmd = ARGV.map {|a| '"' + a.gsub(/"/, '\"') + '"' } * ' '
+
+    if system(cmd)
+      s.show_pass
+    else
+      s.show_fail
+    end
   end
 end
