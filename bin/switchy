@@ -20,7 +20,7 @@ require 'switchy'
 
 args = ARGV.dup
 
-s = Switchy.new
+s = Switchy.new '/dev/ttyACM0'
 # The serial port is a bit tetchy. Give it a few cycles to settle.
 sleep 0.05
 
@@ -61,5 +61,3 @@ until args.empty?
   s.set_pin(lights[light][0], command) if lights[light][0]
   s.set_pin(lights[light][1], 1-command) if lights[light][1]
 end
-
-
