@@ -1,7 +1,7 @@
 spec = Gem::Specification.new do |s|
   s.name = 'switchy'
-  s.version = '0.2.2'
-  s.date = '2009-07-09'
+  s.version = '0.3.0'
+  s.date = '2013-04-06'
   s.summary = 'Switchy USB serial load switcher'
   s.email = "github@shinybit.com"
   s.homepage = "http://github.com/dbrady/switchy"
@@ -9,12 +9,13 @@ spec = Gem::Specification.new do |s|
   s.has_rdoc = true
   s.rdoc_options = ["--line-numbers", "--inline-source", "--main", "README.rdoc", "--title", "Switchy -  USB serial load switcher"]
   s.executables = ["switchy", "sparky", "sparcumber"]
-  s.extra_rdoc_files = ["README.rdoc", "MIT-LICENSE"]
+  s.extra_rdoc_files = ["README.md", "MIT-LICENSE"]
   s.authors = ["David Brady"]
-  s.add_dependency('ruby-serialport')
+  s.add_dependency('serialport')
+  s.license = "MIT"
 
 
-  # ruby -rpp -e "pp (Dir['{README,{examples,lib,protocol,spec}/**/*.{rdoc,json,rb,txt,xml,yml}}'] + Dir['bin/*']).sort"
+  # ruby -rpp -e "pp (Dir['{README,{examples,lib,protocol,spec}/**/*.{rdoc,json,rb,txt,xml,yml,opts}}'] + Dir['bin/*']).sort"
   s.files = ["bin/sparky",
              "bin/switchy",
              "bin/sparcumber",
